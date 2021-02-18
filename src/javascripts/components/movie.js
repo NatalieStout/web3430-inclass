@@ -1,6 +1,11 @@
 import React from 'react'
+import {FaThumbsUp} from 'react-icons/fa'
+import { useHistory } from 'react-router-dom'
+import StarRating from './Stars'
 
-export function Movie(props) {
+export default function Movie(props) {
+    const history = useHistory()
+    const onLike = props.onLike
     const m = props.movie
     return (
       <div className="card">
@@ -8,10 +13,15 @@ export function Movie(props) {
         <h2>{m.title}</h2>
         <p>{m.plot}</p>
         <ul className="extra">
-          <li><strong>{m.rating}</strong> rating</li>
+          <li><strong>{StarRating(m.rating)}{m.rating}</strong> rating</li>
           <li><strong>{m.votes}</strong> votes</li>
-          <li><button className="primary">Select</button></li>
+          <li>
+            <FaThumbsUp color="maroon" onClick={onLike}/><small>{m.likes ? m.likes : 0}</small>
+          </li>
         </ul>
+        <button className="primary" onClick={()=> history.push(`/movies/${m.id}/edit`)}>Edit</button>
       </div>
     )
+
+
   }

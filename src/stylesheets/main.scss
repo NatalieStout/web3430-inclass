@@ -33,12 +33,17 @@ body {
             &>li {
                 margin: 0px;
                 padding: 0px 10px;
+                a {
+                    text-decoration: none;
+                    color: white;
+                }
             }
         }
     }
     main {
         display: flex;
         flex-flow: row wrap;
+        justify-content: space-around;
         &>.card {
             width: 30%;
             border: 1px solid gray;
@@ -50,6 +55,7 @@ body {
             .extra {
                 list-style: none;
                 display: flex;
+                flex-flow: row wrap;
                 padding: 10px 0px;
                 justify-content: center;
                 align-items: center;
@@ -68,4 +74,31 @@ button.primary {
     border-radius: 5px;
     background: maroon;
     color: white;
+}
+
+form {
+    width: 90%;
+    .field {
+        display: flex;
+        & label {
+            width: 15%;
+            padding: 5px;
+            font-weight: bold;
+        }
+        & .control {
+            width: 85%;
+            input,
+            textarea {
+                padding: 10px;
+                border: 1px solid #eee;
+                border-radius: 3px;
+                width: 60%;
+            }
+            p {
+                margin: 5px 0;
+                font-size: 10px;
+                color: red;
+            }
+        }
+    }
 }
