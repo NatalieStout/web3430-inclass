@@ -4,11 +4,27 @@ import {useHistory, useParams} from 'react-router-dom'
 import {useFormik} from 'formik'
 import {toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import * as yup from 'yup'
 toast.configure()
 
 export function VHelp({message}){
     return <p className="help">{message}</p>
 }
+
+const validationSchema = yup.object({
+    year: yup.number().required().min(1900).max(new Date().getFullYear()),
+    id: yup.number().required(),
+    title: yup.string().required(),
+    rated: yup.string().required(),
+    genre: yup.string().required(),
+    poster: yup.string().url().required(),
+    plot: yup.string().required(),
+    rating: yup.number().required(),
+    votes: yup.number().required(),
+    imdbID: yup.string().required(),
+    reviews: yup.string().required()
+
+})
 export default function MovieForm(){
     let {movies, setMovies} = useContext(MovieContext)
     let {mid} = useParams()
@@ -29,31 +45,12 @@ export default function MovieForm(){
             imdbID: "",
             reviews: ""
         } : {...movie},
-        validate(values){
-            let errors = {}
-            if(!values.year || values.year < 1900 || values.year > new Date().getFullYear())
-            errors.year = "Year is required between 1900 and current year"
-
-            if(!values.id) errors.id = "ID is required"
-            if(!values.title) errors.title = "Title is required"
-            if(!values.year) errors.year = "Year is required"
-            if(!values.rated) errors.rated = "Rate is required"
-            if(!values.genre) errors.genre = "Genre is required"
-            if(!values.poster) errors.poster = "Poster is required"
-            if(!values.plot) errors.plot = "Plot is required"
-            if(!values.rating) errors.rating = "Rating is required"
-            if(!values.votes) errors.votes = "Votes are required"
-            if(!values.imdbID) errors.imdbID = "imdbID is required"
-            if(!values.reviews) errors.reviews = "Reviews are required"
-
-
-            return errors
-        },
+        validationSchema,
         onSubmit(values){
             if(is_new){
                 let id = movies.length
                 while(true){
-                    let mv = movies.find(m => m.id = id++)
+                    let mv = movies.find(m => m.id == id++)
                     if(mv == undefined) break
                 }
 
