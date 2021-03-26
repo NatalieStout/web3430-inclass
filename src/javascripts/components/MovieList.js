@@ -1,14 +1,36 @@
-import React, {createContext, useState} from 'react'
+import React, {createContext, useState, useEffect} from 'react'
 import Movie from './Movie'
-import {top10} from '../top10'
 import { Switch, Route, Link, Redirect, useHistory } from 'react-router-dom'
 import {About, ErrorNotFound} from './Pages'
 import MovieForm from './MovieForm'
 
 export const MovieContext = createContext()
 export default function MovieList() {
-  const [movies, setMovies] = useState(top10)
+  const [movies, setMovies] = useState()
   const history = useHistory()
+
+  useEffect(() => {
+    if(!movies){
+      fetch('/api/movies', {
+        credentials: 'same-origin'
+      })
+        .then(response => response.text())
+        .then((data) => {
+          setMovies(JSON.parse(data, (key, value) => {
+            const dateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:.*Z$/
+            if(typeof value === 'string' && dateFormat.test(value)){
+              return new Date(value)
+            }
+            return value
+          }))
+        })
+        .catch(console.error)
+    }
+  })
+
+  if(!movies)
+    return <p>Loading...</p>
+
       return (
         <MovieContext.Provider value={{movies, setMovies}}>
           <nav>

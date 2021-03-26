@@ -4,6 +4,8 @@ import {useHistory, useParams} from 'react-router-dom'
 import {useFormik} from 'formik'
 import {toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 import * as yup from 'yup'
 toast.configure()
 
@@ -22,6 +24,7 @@ const validationSchema = yup.object({
     rating: yup.number().required(),
     votes: yup.number().required(),
     imdbID: yup.string().required(),
+    releaseDate: yup.date().required(),
     reviews: yup.string().required()
 
 })
@@ -31,7 +34,7 @@ export default function MovieForm(){
 
     let movie = mid ? movies.find(m => m.id == mid) : {}
     let is_new = mid === undefined
-    let {handleSubmit, handleChange, values, errors} = useFormik({
+    let {handleSubmit, handleChange, values, errors, setFieldValue} = useFormik({
         initialValues: is_new ? {
             year: new Date().getFullYear(),
             id: "",
@@ -43,6 +46,7 @@ export default function MovieForm(){
             rating: "",
             votes: "",
             imdbID: "",
+            releaseDate: "",
             reviews: ""
         } : {...movie},
         validationSchema,
@@ -159,6 +163,15 @@ export default function MovieForm(){
                 <div className="control">
                     <input type="text" name="imdbID" value={values.imdbID} onChange={handleChange}/>
                     <VHelp message={errors.imdbID}/>
+                </div>
+            </div>
+
+            {/* RELEASE DATE */}
+            <div className="field">
+                <label htmlFor="releaseDate">ReleaseDate</label>
+                <div className="control">
+                    <DatePicker name="releaseDate" selected={values.releaseDate} onChange={date => setFieldValue('releaseDate', date)}/>
+                    <VHelp message={errors.releaseDate}/>
                 </div>
             </div>
 
